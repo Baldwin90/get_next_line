@@ -16,10 +16,6 @@
 # define BUF_IND file->buf_ind
 # define N_BYTES_READ file->n_bytes_read
 # define BUF file->buf
-/*
-** might not be needed
-** # define BUFF_SIZE_TOTAL	(BUFF_SIZE * F_COUNT_MAX)
-*/
 
 typedef struct	s_file
 {
@@ -32,23 +28,3 @@ typedef struct	s_file
 
 int		get_next_line(const int fd, char **line);
 #endif
-
-// make an i to add with file->index
-// loop through buffer until it either reaches '\n', EOF or i + file->index == BUFF_SIZE
-	// if i + file->index == 
-
-// you're going to be making a new string, so make it the size of the buffer
-// copy everything from the buffer into the result
-	// if you hit '\n' or EOF then you stop copying
-	// check if file->index + 1 is BUFF_SIZE
-		// if it is then you need to read from the file again
-		// you also need to copy the result pointer to a temp pointer
-		// assign new memory to the result pointer; it will bee the result length + BUFF_SIZE
-		// memcpy the contents of tmp to result. It will be copied the result length
-		// free tmp
-	// always incriment result length and file->index
-
-// if index > BUFFERSIZE
-	// index = 0;
-	// read in next buffer
-	
