@@ -9,14 +9,8 @@ LIBFT_FILES		= ft_sqrt ft_ceil ft_memalloc ft_strcontains ft_strclen ft_strndup 
 					ft_lstiter ft_lstmap ft_lstnew ft_memjoin ft_llutoa_base ft_strupcase ft_isnumeric ft_realloc \
 					ft_indexof
 
-PRINTF_FILES	= string_utils ft_printf parse_conversion convert_char convert_hexa_octa_int convert_string
-
-GET_NEXT_LINE	= get_next_line
-
-FLAG_PARSER		= ft_getflags ft_hasflag
-
-DOTCFILES		= $(addprefix srcs/flag_parser/, $(addsuffix .c, $(FLAG_PARSER))) $(addprefix srcs/get_next_line/, $(addsuffix .c, $(GET_NEXT_LINE))) $(addprefix srcs/libft/, $(addsuffix .c, $(LIBFT_FILES))) $(addprefix srcs/printf/, $(addsuffix .c, $(PRINTF_FILES)))
-OBJECT_FILES	= $(addprefix build/, $(addsuffix .o, $(FLAG_PARSER))) $(addprefix build/, $(addsuffix .o, $(GET_NEXT_LINE))) $(addprefix build/, $(addsuffix .o, $(LIBFT_FILES))) $(addprefix build/, $(addsuffix .o, $(PRINTF_FILES)))
+DOTCFILES		= $(addprefix srcs/, $(addsuffix .c, $(LIBFT_FILES)))
+OBJECT_FILES	= $(addprefix build/, $(addsuffix .o, $(LIBFT_FILES)))
 
 NAME			= libft.a
 
@@ -46,7 +40,7 @@ build:
 		mkdir build/
 		# mkdir ../libs/
 		
-build/%.o: srcs/*/%.c | build
+build/%.o: srcs/%.c | build
 		$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(NAME): $(OBJECT_FILES)

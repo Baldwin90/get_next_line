@@ -22,6 +22,13 @@
 # define TRUE	1
 # define FALSE	0
 
+typedef struct	s_l
+{
+	void		*content;
+	size_t		content_size;
+	struct s_l	*next;
+}				t_list;
+
 /*
 ** LIBFT
 ** V V V
