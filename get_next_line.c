@@ -23,7 +23,7 @@ t_file 	*new_file(const int fd)
 			file[i].buf_ind = 0;
 			file[i].last_stored = NULL;
 			file[i].n_bytes_read = 0;
-			while (j < BUFF_SIZE)
+			while (j < BUFF_SIZE + 1)
 			{
 				file[i].buf[j] = 0;
 				j += 1;
@@ -59,7 +59,7 @@ char	*store_line(t_file *file, char *result, int result_len, int *r_code)
 {
 	FU;
 	if (BUF_IND >= N_BYTES_READ && (N_BYTES_READ =
-		read(file->fd, BUF, BUFF_SIZE - 1)) == 0)
+		read(file->fd, BUF, BUFF_SIZE)) == 0)
 	{
 		*r_code = 0;
 		return (result);
@@ -67,11 +67,11 @@ char	*store_line(t_file *file, char *result, int result_len, int *r_code)
 	while (TRUE)
 	{
 		*r_code = 1;
-		if (++i + BUF_IND >= BUFF_SIZE || i + BUF_IND >= N_BYTES_READ)
+		if (++i + BUF_IND >= BUFF_SIZE + 1 || i + BUF_IND >= N_BYTES_READ)
 		{
 			grow_string(file, &i, &result, &result_len);
 			BUF_IND = 0;
-			if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE - 1)) < 0)
+			if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE)) < 0)
 			{
 				*r_code = -1;
 				return (result);

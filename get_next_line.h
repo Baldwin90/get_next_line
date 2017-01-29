@@ -3,9 +3,13 @@
 
 #include "libft/includes/libft.h"
 
+/*
+** BUFF_SIZE is actually 1 larger than shown below, becuase of stupid
+** 42FileChecker BS
+*/
 # define TRUE			1
 # define FALSE			0
-# define BUFF_SIZE		2048
+# define BUFF_SIZE		2047
 # define F_COUNT_MAX	64
 # define I	static
 # define GNL_V I int total = 0; int i = 0; int j = 0;
@@ -23,7 +27,7 @@ typedef struct	s_file
 	int			buf_ind;
 	char		*last_stored;
 	int			n_bytes_read;
-	char		buf[BUFF_SIZE];
+	char		buf[BUFF_SIZE + 1];
 }				t_file;
 
 int		get_next_line(const int fd, char **line);
