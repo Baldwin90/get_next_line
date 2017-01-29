@@ -48,24 +48,27 @@ void	grow_string(t_file *file, int *i, char **result, int *result_len)
 	if (tmp)
 		free(tmp);
 	BUF_IND += *i + 1;
-	*result_len += *i;	
+	*result_len += *i;
 	*i = -1;
 }
 
-char	*store_line(t_file *file, char *result, int result_len)
+char	*store_line(t_file *file, char *result, int result_len, int *r_code)
 {
 	int i;
 
 	i = -1;
-	if (N_BYTES_READ == 0 && (N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE - 1)) < 0)
+	if (N_BYTES_READ == 0 && (N_BYTES_READ =\
+		read(file->fd, BUF, BUFF_SIZE - 1)) == 0)
+		return (result);
 	while (TRUE)
 	{
 		if (++i + BUF_IND >= BUFF_SIZE || i + BUF_IND >= N_BYTES_READ)
 		{
 			grow_string(file, &i, &result, &result_len);
 			BUF_IND = 0;
-			if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE - 1)) < 0)
+			if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE - 1)) < 1)
 			{
+				*r_code = N_BYTES_READ == 0 ? 0 : -1;
 				// printf("file descriptor: %i\n", FD);
 				// printf("N_BYTES_READ: %i\n", N_BYTES_READ);
 				return (NULL);
@@ -77,7 +80,6 @@ char	*store_line(t_file *file, char *result, int result_len)
 			grow_string(file, &i, &result, &result_len);
 			break;
 		}
-		if (N_BYTES_READ == 0)
 	}
 	return (result);
 }
@@ -86,18 +88,19 @@ int		get_next_line(const int fd, char **line)
 {
 	t_file	*file;
 	char	*result;
-	// int		r_code;
+	int		r_code;
 
+	r_code = 0;
 	if (!(file = new_file(fd)))
 		return (-1); // I think this means it wasnt able to read from the file
 	// if (*line == file->last_stored && *line != NULL)
 	// 	free(*line); // double check this
 	if (!(result = (char*)ft_memalloc(1)))
 		return (-1);
-	if (!(result = store_line(file, result, 0)))
+	if (!(result = store_line(file, result, 0, &r_code)))
 		return (-1);
 	file->last_stored = result;
 	*line = result;
 	// return (r_code);
-	return (1);
+	return (r_code);
 }
