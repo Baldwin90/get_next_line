@@ -82,6 +82,8 @@ static char	*store_line(t_file *file, char *result, int result_len, int *r_code)
 	return (result);
 }
 
+#include <stdio.h>
+
 int		get_next_line(const int fd, char **line)
 {
 	t_file	*file;
