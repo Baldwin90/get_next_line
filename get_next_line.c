@@ -82,6 +82,11 @@ static char	*store_line(t_file *file, char *result, int result_len, int *r_code)
 	return (result);
 }
 
+/*
+** If you want it to automatically free the string insert this code in line 99
+** if (*line != NULL && *line == file->last_stored){free (*line);}
+** If you don't want it to do it then remove lines 99 and 100
+*/
 int		get_next_line(const int fd, char **line)
 {
 	t_file	*file;
