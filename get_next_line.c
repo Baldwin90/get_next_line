@@ -9,7 +9,7 @@
 # define GARBAGE &result_len);break;}if(N_BYTES_READ == 0){return(result);}
 # define NORM BS GARBAGE;
 
-t_file 	*new_file(const int fd)
+static t_file 	*new_file(const int fd)
 {
 	static t_file file[F_COUNT_MAX];
 
@@ -37,7 +37,7 @@ t_file 	*new_file(const int fd)
 	return (NULL);
 }
 
-void	grow_string(t_file *file, int *i, char **result, int *result_len)
+static void	grow_string(t_file *file, int *i, char **result, int *result_len)
 {
 	char *tmp;
 
@@ -55,7 +55,7 @@ void	grow_string(t_file *file, int *i, char **result, int *result_len)
 	*i = -1;
 }
 
-char	*store_line(t_file *file, char *result, int result_len, int *r_code)
+static char	*store_line(t_file *file, char *result, int result_len, int *r_code)
 {
 	FU;
 	if (BUF_IND >= N_BYTES_READ && (N_BYTES_READ =
@@ -91,6 +91,8 @@ int		get_next_line(const int fd, char **line)
 	r_code = -1;
 	if (!(file = new_file(fd)) || line == NULL)
 		return (r_code);
+	if (*line != NULL && *line == file->last_stored)
+		free (*line);
 	if (!(result = (char*)ft_memalloc(1)))
 		return (r_code);
 	if (!(result = store_line(file, result, 0, &r_code)))

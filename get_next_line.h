@@ -11,12 +11,10 @@
 # define FALSE			0
 # define BUFF_SIZE		2047
 # define F_COUNT_MAX	64
-# define I	static
-# define GNL_V I int total = 0; int i = 0; int j = 0;
+# define STAT	static
+# define GNL_V STAT int total = 0; int i = 0; int j = 0;
 # define GNL_1 if (fd < 0) {return (NULL);}
 # define GNL_2 GNL_V GNL_1
-# define LET file->buf[file->index + ind]
-# define FD file->fd
 # define BUF_IND file->buf_ind
 # define N_BYTES_READ file->n_bytes_read
 # define BUF file->buf
