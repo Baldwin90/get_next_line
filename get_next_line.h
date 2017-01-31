@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pbaldwin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/01/30 15:49:49 by pbaldwin          #+#    #+#             */
+/*   Updated: 2017/01/30 15:49:51 by pbaldwin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#include "libft/includes/libft.h"
+# include "libft/includes/libft.h"
 
 /*
 ** BUFF_SIZE is actually 1 larger than shown below, becuase of stupid
@@ -28,5 +40,5 @@ typedef struct	s_file
 	char		buf[BUFF_SIZE + 1];
 }				t_file;
 
-int		get_next_line(const int fd, char **line);
+int				get_next_line(const int fd, char **line);
 #endif

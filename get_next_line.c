@@ -1,15 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pbaldwin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/01/30 15:49:40 by pbaldwin          #+#    #+#             */
+/*   Updated: 2017/01/30 15:49:42 by pbaldwin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft/includes/libft.h"
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
 #include "get_next_line.h"
 
-# define FU int i = -1;
-# define BS else if(BUF[i+BUF_IND]=='\n'){grow_string(file,&i,&result,
-# define GARBAGE &result_len);break;}if(N_BYTES_READ == 0){return(result);}
-# define NORM BS GARBAGE;
+#define FU int i = -1;
+#define BS else if(BUF[i+BUF_IND]=='\n'){grow_string(file,&i,&result,
+#define GARBAGE &r_len);break;}if(N_BYTES_READ == 0){return(result);}
+#define NORM BS GARBAGE;
 
-static t_file 	*new_file(const int fd)
+static t_file	*new_file(const int fd)
 {
 	static t_file file[F_COUNT_MAX];
 
@@ -37,25 +49,25 @@ static t_file 	*new_file(const int fd)
 	return (NULL);
 }
 
-static void	grow_string(t_file *file, int *i, char **result, int *result_len)
+static void		grow_string(t_file *file, int *i, char **result, int *r_len)
 {
 	char *tmp;
 
 	tmp = *result;
-	if (!(*result = (char*)ft_memalloc(*result_len + *i + 1)))
+	if (!(*result = (char*)ft_memalloc(*r_len + *i + 1)))
 	{
 		return ;
 	}
-	ft_memcpy(*result, tmp, *result_len);
-	ft_memcpy(&(*result)[*result_len], &(BUF[BUF_IND]), *i);
+	ft_memcpy(*result, tmp, *r_len);
+	ft_memcpy(&(*result)[*r_len], &(BUF[BUF_IND]), *i);
 	if (tmp)
 		free(tmp);
 	BUF_IND += *i + 1;
-	*result_len += *i;
+	*r_len += *i;
 	*i = -1;
 }
 
-static char	*store_line(t_file *file, char *result, int result_len, int *r_code)
+static char		*store_line(t_file *file, char *result, int r_len, int *r_code)
 {
 	FU;
 	if (BUF_IND >= N_BYTES_READ && (N_BYTES_READ =
@@ -69,7 +81,7 @@ static char	*store_line(t_file *file, char *result, int result_len, int *r_code)
 		*r_code = 1;
 		if (++i + BUF_IND >= BUFF_SIZE + 1 || i + BUF_IND >= N_BYTES_READ)
 		{
-			grow_string(file, &i, &result, &result_len);
+			grow_string(file, &i, &result, &r_len);
 			BUF_IND = 0;
 			if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE)) < 0)
 			{
@@ -87,7 +99,8 @@ static char	*store_line(t_file *file, char *result, int result_len, int *r_code)
 ** if (*line != NULL && *line == file->last_stored){free (*line);}
 ** If you don't want it to do it then remove lines 99 and 100
 */
-int		get_next_line(const int fd, char **line)
+
+int				get_next_line(const int fd, char **line)
 {
 	t_file	*file;
 	char	*result;
@@ -97,7 +110,7 @@ int		get_next_line(const int fd, char **line)
 	if (!(file = new_file(fd)) || line == NULL)
 		return (r_code);
 	if (*line != NULL && *line == file->last_stored)
-		free (*line);
+		free(*line);
 	if (!(result = (char*)ft_memalloc(1)))
 		return (r_code);
 	if (!(result = store_line(file, result, 0, &r_code)))
