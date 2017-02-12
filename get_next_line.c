@@ -15,6 +15,7 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include "get_next_line.h"
+#include <stdio.h> // delete me
 
 #define FU int i = -1;
 #define BS else if(BUF[i+BUF_IND]=='\n'){grow_string(file,&i,&result,
@@ -35,7 +36,7 @@ static t_file	*new_file(const int fd)
 			file[i].buf_ind = 0;
 			file[i].last_stored = NULL;
 			file[i].n_bytes_read = 0;
-			while (j < BUFF_SIZE + 1)
+			while (j < BUFF_SIZE)
 			{
 				file[i].buf[j] = 0;
 				j += 1;
@@ -43,7 +44,9 @@ static t_file	*new_file(const int fd)
 			return (&file[i]);
 		}
 		else if (file[i].fd == fd)
+		{
 			return (&file[i]);
+		}
 		i += 1;
 	}
 	return (NULL);
@@ -61,7 +64,9 @@ static void		grow_string(t_file *file, int *i, char **result, int *r_len)
 	ft_memcpy(*result, tmp, *r_len);
 	ft_memcpy(&(*result)[*r_len], &(BUF[BUF_IND]), *i);
 	if (tmp)
+	{
 		free(tmp);
+	}
 	BUF_IND += *i + 1;
 	*r_len += *i;
 	*i = -1;
@@ -79,8 +84,9 @@ static char		*store_line(t_file *file, char *result, int r_len, int *r_code)
 	while (TRUE)
 	{
 		*r_code = 1;
-		if (++i + BUF_IND >= BUFF_SIZE + 1 || i + BUF_IND >= N_BYTES_READ)
+		if (++i + BUF_IND >= BUFF_SIZE || i + BUF_IND >= N_BYTES_READ)
 		{
+			// printf("i %i\n", i);
 			grow_string(file, &i, &result, &r_len);
 			BUF_IND = 0;
 			if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE)) < 0)
@@ -90,6 +96,15 @@ static char		*store_line(t_file *file, char *result, int r_len, int *r_code)
 			}
 		}
 		NORM;
+	}
+	if (++i + BUF_IND >= BUFF_SIZE || i + BUF_IND >= N_BYTES_READ)
+	{
+		BUF_IND = 0;
+		if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE)) < 0)
+		{
+				*r_code = -1;
+				return (result);
+		}
 	}
 	return (result);
 }
@@ -108,13 +123,22 @@ int				get_next_line(const int fd, char **line)
 
 	r_code = -1;
 	if (!(file = new_file(fd)) || line == NULL)
+	{
 		return (r_code);
+	}
 	if (*line != NULL && *line == file->last_stored)
+	{
 		free(*line);
+	}
 	if (!(result = (char*)ft_memalloc(1)))
+	{
 		return (r_code);
+	}
+	// printf("BUF_IND %i\n", BUF_IND);
 	if (!(result = store_line(file, result, 0, &r_code)))
+	{
 		return (-1);
+	}
 	file->last_stored = result;
 	*line = result;
 	return (r_code);

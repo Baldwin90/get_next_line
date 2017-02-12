@@ -21,7 +21,7 @@
 */
 # define TRUE			1
 # define FALSE			0
-# define BUFF_SIZE		2047
+# define BUFF_SIZE		1
 # define F_COUNT_MAX	64
 # define STAT	static
 # define GNL_V STAT int total = 0; int i = 0; int j = 0;
@@ -37,7 +37,7 @@ typedef struct	s_file
 	int			buf_ind;
 	char		*last_stored;
 	int			n_bytes_read;
-	char		buf[BUFF_SIZE + 1];
+	char		buf[BUFF_SIZE];
 }				t_file;
 
 int				get_next_line(const int fd, char **line);
