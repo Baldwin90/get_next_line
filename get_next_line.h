@@ -21,7 +21,7 @@
 */
 # define TRUE			1
 # define FALSE			0
-# define BUFF_SIZE		2048
+# define BUFF_SIZE		1
 # define F_COUNT_MAX	64
 # define STAT	static
 # define GNL_V STAT int total = 0; int i = 0; int j = 0;

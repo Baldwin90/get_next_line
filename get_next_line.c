@@ -16,12 +16,11 @@
 #include <unistd.h>
 #include "get_next_line.h"
 
-#define FU int i = -1;
-#define BS else if(BUF[i+BUF_IND]=='\n'){grow_string(file,&i,&result,
-#define GARBAGE &r_len);break;}if(N_BYTES_READ == 0){return(result);}
-#define NORM BS GARBAGE;
-#define HATE_YOU {*r_code = 0; return (result);}
-#define EVEN_MORE {*r_code = -1;return (result);}
+#define GNL_BS else if(BUF[i+BUF_IND]=='\n'){grow_string(file,&i,&result,
+#define GNL_GARBAGE &r_len);break;}if(N_BYTES_READ == 0){return(result);}
+#define GNL_NORM GNL_BS GNL_GARBAGE;
+#define GNL_3 {*r_code = 0;return (result);}
+#define GNL_4 {*r_code = -1;return (result);}
 
 static t_file	*new_file(const int fd)
 {
@@ -63,9 +62,7 @@ static void		grow_string(t_file *file, int *i, char **result, int *r_len)
 	ft_memcpy(*result, tmp, *r_len);
 	ft_memcpy(&(*result)[*r_len], &(BUF[BUF_IND]), *i);
 	if (tmp)
-	{
 		free(tmp);
-	}
 	BUF_IND += *i + 1;
 	*r_len += *i;
 	*i = -1;
@@ -73,10 +70,12 @@ static void		grow_string(t_file *file, int *i, char **result, int *r_len)
 
 static char		*store_line(t_file *file, char *result, int r_len, int *r_code)
 {
-	FU;
+	int i;
+
+	i = -1;
 	if (BUF_IND >= N_BYTES_READ && (N_BYTES_READ =
 		read(file->fd, BUF, BUFF_SIZE)) == 0)
-		HATE_YOU;
+		GNL_3;
 	while (TRUE)
 	{
 		*r_code = 1;
@@ -85,15 +84,15 @@ static char		*store_line(t_file *file, char *result, int r_len, int *r_code)
 			grow_string(file, &i, &result, &r_len);
 			BUF_IND = 0;
 			if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE)) < 0)
-				EVEN_MORE;
+				GNL_4;
 		}
-		NORM;
+		GNL_NORM;
 	}
 	if (++i + BUF_IND >= BUFF_SIZE || i + BUF_IND >= N_BYTES_READ)
 	{
 		BUF_IND = 0;
 		if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE)) < 0)
-			EVEN_MORE;
+			GNL_4;
 	}
 	return (result);
 }
@@ -112,21 +111,13 @@ int				get_next_line(const int fd, char **line)
 
 	r_code = -1;
 	if (!(file = new_file(fd)) || line == NULL)
-	{
 		return (r_code);
-	}
-	if (*line != NULL && *line == file->last_stored)
-	{
+	if (*line != NULL && *line == file->last_stored && FALSE)
 		free(*line);
-	}
 	if (!(result = (char*)ft_memalloc(1)))
-	{
 		return (r_code);
-	}
 	if (!(result = store_line(file, result, 0, &r_code)))
-	{
 		return (-1);
-	}
 	file->last_stored = result;
 	*line = result;
 	return (r_code);
