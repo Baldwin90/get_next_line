@@ -15,12 +15,13 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include "get_next_line.h"
-#include <stdio.h> // delete me
 
 #define FU int i = -1;
 #define BS else if(BUF[i+BUF_IND]=='\n'){grow_string(file,&i,&result,
 #define GARBAGE &r_len);break;}if(N_BYTES_READ == 0){return(result);}
 #define NORM BS GARBAGE;
+#define HATE_YOU {*r_code = 0; return (result);}
+#define EVEN_MORE {*r_code = -1;return (result);}
 
 static t_file	*new_file(const int fd)
 {
@@ -77,23 +78,16 @@ static char		*store_line(t_file *file, char *result, int r_len, int *r_code)
 	FU;
 	if (BUF_IND >= N_BYTES_READ && (N_BYTES_READ =
 		read(file->fd, BUF, BUFF_SIZE)) == 0)
-	{
-		*r_code = 0;
-		return (result);
-	}
+		HATE_YOU;
 	while (TRUE)
 	{
 		*r_code = 1;
 		if (++i + BUF_IND >= BUFF_SIZE || i + BUF_IND >= N_BYTES_READ)
 		{
-			// printf("i %i\n", i);
 			grow_string(file, &i, &result, &r_len);
 			BUF_IND = 0;
 			if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE)) < 0)
-			{
-				*r_code = -1;
-				return (result);
-			}
+				EVEN_MORE;
 		}
 		NORM;
 	}
@@ -101,10 +95,7 @@ static char		*store_line(t_file *file, char *result, int r_len, int *r_code)
 	{
 		BUF_IND = 0;
 		if ((N_BYTES_READ = read(file->fd, BUF, BUFF_SIZE)) < 0)
-		{
-				*r_code = -1;
-				return (result);
-		}
+			EVEN_MORE;
 	}
 	return (result);
 }
@@ -134,7 +125,6 @@ int				get_next_line(const int fd, char **line)
 	{
 		return (r_code);
 	}
-	// printf("BUF_IND %i\n", BUF_IND);
 	if (!(result = store_line(file, result, 0, &r_code)))
 	{
 		return (-1);
