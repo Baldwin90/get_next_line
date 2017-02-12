@@ -45,9 +45,7 @@ static t_file	*new_file(const int fd)
 			return (&file[i]);
 		}
 		else if (file[i].fd == fd)
-		{
 			return (&file[i]);
-		}
 		i += 1;
 	}
 	return (NULL);
